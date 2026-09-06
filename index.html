@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SolarCare AI</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <header>
+        <div>
+            <h1>☀️ SolarCare AI</h1>
+            <p>Smart Solar Maintenance Advisor</p>
+        </div>
+
+        <div class="status">
+            ● System Online
+        </div>
+    </header>
+
+
+    <!-- NAVIGATION -->
+    <nav>
+        <button onclick="showPage('dashboard')">Dashboard</button>
+        <button onclick="showPage('advisor')">Cleaning Advisor</button>
+        <button onclick="showPage('prediction')">AI Prediction</button>
+        <button onclick="showPage('weather')">Weather</button>
+        <button onclick="showPage('history')">History</button>
+    </nav>
+
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <section id="dashboard" class="page active">
+
+        <h2>☀️ Solar Dashboard</h2>
+
+        <div class="cards">
+
+            <div class="card">
+                <span>⚡</span>
+                <h3>Current Power</h3>
+                <strong id="power">12.45 kW</strong>
+            </div>
+
+            <div class="card">
+                <span>🔋</span>
+                <h3>Panel Voltage</h3>
+                <strong id="voltage">24.6 V</strong>
+            </div>
+
+            <div class="card">
+                <span>📊</span>
+                <h3>Efficiency</h3>
+                <strong id="efficiency">87.3%</strong>
+            </div>
+
+            <div class="card">
+                <span>🌫️</span>
+                <h3>Dust Level</h3>
+                <strong id="dustLevel">High</strong>
+            </div>
+
+        </div>
+
+
+        <!-- HARDWARE DATA -->
+
+        <h2 class="section-title">
+            📡 Live Hardware Sensor Data
+        </h2>
+
+        <div class="sensor-grid">
+
+            <div class="sensor-card">
+                <span>🌡️</span>
+                <h3>Panel Temperature</h3>
+                <strong id="temperature">32°C</strong>
+                <p>Temperature Sensor</p>
+            </div>
+
+            <div class="sensor-card">
+                <span>💧</span>
+                <h3>Humidity</h3>
+                <strong id="humidity">56%</strong>
+                <p>DHT11 / DHT22</p>
+            </div>
+
+            <div class="sensor-card">
+                <span>🌫️</span>
+                <h3>Dust Accumulation</h3>
+                <strong id="dust">72%</strong>
+                <p>Dust Sensor</p>
+            </div>
+
+            <div class="sensor-card">
+                <span>📡</span>
+                <h3>ESP32 Status</h3>
+                <strong id="esp32">Online</strong>
+                <p>Wi-Fi Connected</p>
+            </div>
+
+        </div>
+
+
+        <!-- CLEANING PRIORITY -->
+
+        <div class="priority">
+
+            <h2>🧹 AI Cleaning Priority</h2>
+
+            <div class="score" id="score">
+                72<span>/100</span>
+            </div>
+
+            <h3 id="priorityText">
+                HIGH PRIORITY
+            </h3>
+
+            <p id="recommendationText">
+                Panel cleaning is recommended within 3 days.
+            </p>
+
+            <button class="main-btn" onclick="showPage('advisor')">
+                View Recommendation
+            </button>
+
+            <button class="clean-btn" onclick="startCleaning()">
+                🧹 START AUTOMATIC CLEANING
+            </button>
+
+            <div id="cleanStatus" class="clean-status"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CLEANING ADVISOR ================= -->
+
+    <section id="advisor" class="page">
+
+        <h2>🧹 AI Cleaning Advisor</h2>
+
+        <div class="recommendation">
+
+            <h2>🤖 AI Recommendation</h2>
+
+            <div class="info">
+
+                <p>🌫️ Dust Accumulation: <b>High</b></p>
+                <p>🌧️ Rain Forecast: <b>80%</b></p>
+                <p>📉 Efficiency Impact: <b>Moderate</b></p>
+                <p>🎯 Cleaning Score: <b>72/100</b></p>
+
+            </div>
+
+
+            <!-- LANGUAGE -->
+
+            <div class="language-box">
+
+                <label for="language">
+                    Select Language
+                </label>
+
+                <select id="language" onchange="updateLanguage()">
+                    <option value="ta">தமிழ்</option>
+                    <option value="en">English</option>
+                </select>
+
+            </div>
+
+
+            <!-- VOICE -->
+
+            <div class="voice-box">
+
+                <h3>🔊 Voice Recommendation</h3>
+
+                <p id="voiceText">
+                    வணக்கம். உங்கள் சோலார் பேனலில் தூசி அதிகமாக உள்ளது.
+                    மூன்று நாட்களுக்குள் சுத்தம் செய்ய பரிந்துரைக்கப்படுகிறது.
+                </p>
+
+                <button
+                    type="button"
+                    class="voice-btn"
+                    onclick="speakRecommendation()">
+                    🔊 Play Voice
+                </button>
+
+                <button
+                    type="button"
+                    class="stop-btn"
+                    onclick="stopVoice()">
+                    ⏹ Stop
+                </button>
+
+            </div>
+
+
+            <!-- ALERT -->
+
+            <div class="sms-box">
+
+                <h3>💬 SolarCare AI Alert</h3>
+
+                <p id="smsText">
+                    உங்கள் சோலார் பேனலில் தூசி அதிகமாக உள்ளது.
+                    மூன்று நாட்களுக்குள் சுத்தம் செய்ய பரிந்துரைக்கப்படுகிறது.
+                </p>
+
+                <small>Just now</small>
+
+            </div>
+
+
+            <button
+                class="clean-btn"
+                onclick="startCleaning()">
+
+                🧹 START AUTOMATIC CLEANING
+
+            </button>
+
+            <div id="advisorStatus" class="clean-status"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= AI PREDICTION ================= -->
+
+    <section id="prediction" class="page">
+
+        <h2>🤖 AI Prediction</h2>
+
+        <div class="prediction-box">
+
+            <h3>What If I Don't Clean?</h3>
+
+            <div class="prediction-grid">
+
+                <div>
+                    <p>Current Efficiency</p>
+                    <strong>87.3%</strong>
+                </div>
+
+                <div>
+                    <p>Predicted Efficiency</p>
+                    <strong>78.5%</strong>
+                </div>
+
+                <div>
+                    <p>Estimated Energy Loss</p>
+                    <strong>12.4 kWh</strong>
+                </div>
+
+            </div>
+
+            <div class="warning">
+                ⚠️ Cleaning the panels soon can help maintain better performance.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= WEATHER ================= -->
+
+    <section id="weather" class="page">
+
+        <h2>🌦️ Weather Information</h2>
+
+        <div class="weather-card">
+
+            <h3>Today's Weather</h3>
+
+            <div class="temperature">
+                28°C
+            </div>
+
+            <p>💧 Humidity: <b>56%</b></p>
+            <p>🌧️ Rain Probability: <b>80%</b></p>
+            <p>💨 Wind Speed: <b>12 km/h</b></p>
+
+        </div>
+
+
+        <h2 class="section-title">
+            📅 7-Day Weather Forecast
+        </h2>
+
+        <div class="forecast-grid">
+
+            <div class="forecast-card">
+                <h3>Today</h3>
+                <div class="weather-icon">🌧️</div>
+                <strong>28°C</strong>
+                <p>Rain: 80%</p>
+                <p>💨 12 km/h</p>
+            </div>
+
+            <div class="forecast-card">
+                <h3>Day 2</h3>
+                <div class="weather-icon">⛅</div>
+                <strong>30°C</strong>
+                <p>Rain: 40%</p>
+                <p>💨 10 km/h</p>
+            </div>
+
+            <div class="forecast-card">
+                <h3>Day 3</h3>
+                <div class="weather-icon">☀️</div>
+                <strong>32°C</strong>
+                <p>Rain: 10%</p>
+                <p>💨 9 km/h</p>
+            </div>
+
+            <div class="forecast-card">
+                <h3>Day 4</h3>
+                <div class="weather-icon">🌤️</div>
+                <strong>31°C</strong>
+                <p>Rain: 20%</p>
+                <p>💨 11 km/h</p>
+            </div>
+
+            <div class="forecast-card">
+                <h3>Day 5</h3>
+                <div class="weather-icon">🌧️</div>
+                <strong>27°C</strong>
+                <p>Rain: 70%</p>
+                <p>💨 14 km/h</p>
+            </div>
+
+            <div class="forecast-card">
+                <h3>Day 6</h3>
+                <div class="weather-icon">🌥️</div>
+                <strong>29°C</strong>
+                <p>Rain: 30%</p>
+                <p>💨 10 km/h</p>
+            </div>
+
+            <div class="forecast-card">
+                <h3>Day 7</h3>
+                <div class="weather-icon">☀️</div>
+                <strong>33°C</strong>
+                <p>Rain: 5%</p>
+                <p>💨 8 km/h</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= HISTORY ================= -->
+
+    <section id="history" class="page">
+
+        <h2>📋 Maintenance History</h2>
+
+        <div class="history-item">
+            <b>15 Aug 2026</b>
+            <span id="historyStatus">Cleaning scheduled</span>
+        </div>
+
+        <div class="history-item">
+            <b>05 Aug 2026</b>
+            <span>Cleaning completed</span>
+        </div>
+
+        <div class="history-item">
+            <b>20 Jul 2026</b>
+            <span>Inspection completed</span>
+        </div>
+
+    </section>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
